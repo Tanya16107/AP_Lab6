@@ -128,11 +128,11 @@ class Knight extends Player{
         Object popped = this.getPopped();
         if(popped==null){
             this.remove();
-            throw new StackEmptyException("StackEmptyException: Stack​ ​Empty​ ​exception");
+            throw new StackEmptyException("Stack​ ​Empty​ ​exception");
         }
 
         if(popped instanceof String || popped instanceof Integer || popped instanceof Float){
-            throw new NonCoordinateException("NonCoordinateException: Not a coordinate Exception "+popped.toString());
+            throw new NonCoordinateException("Not a coordinate Exception "+popped.toString());
         }
                 
         if(popped instanceof Coordinate){
@@ -146,7 +146,7 @@ class Knight extends Player{
                         if(this.sameCoordinate(arr[i].getCoordinates())){
 
                             arr[i].remove();
-                            throw new OverlapException("OverlapException: Knights​ ​Overlap​ ​Exception "+arr[i].getName());
+                            throw new OverlapException("Knights​ ​Overlap​ ​Exception "+arr[i].getName());
                    
                         }
                     }
@@ -154,7 +154,7 @@ class Knight extends Player{
             }
 
             if(this.sameCoordinate(queen.getCoordinates())){
-                throw new QueenFoundException("QueenFoundException: Queen​ ​has​ ​been​ ​Found.​ ​Abort!");
+                throw new QueenFoundException("Queen​ ​has​ ​been​ ​Found.​ ​Abort!");
             
             }
         }
@@ -275,20 +275,20 @@ class App{
                     success = true;
                 }
                 catch(NonCoordinateException e){
-                    w.println(e.getMessage()); 
+                    w.println(e); 
 
                 }
                 catch(StackEmptyException e){
-                    w.println(e.getMessage()); 
+                    w.println(e); 
 
                 }
                 catch(OverlapException e){
-                    w.println(e.getMessage());
+                    w.println(e);
                 }
 
                 catch(QueenFoundException e){
                     queen.milGayi();
-                    w.println(e.getMessage());
+                    w.println(e);
                 }
                 if(success){
                     w.println("No exception "+knightsArray[i].getCoordinates().toString());
