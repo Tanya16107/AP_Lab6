@@ -124,33 +124,7 @@ class Knight extends Player{
         return removed;
     }
 
-    public void move(Coordinate popped, Knight[] arr, Queen queen) throws OverlapException, QueenFoundException{
-        p.setX(popped.getX());
-        p.setY(popped.getY());
-
-        for(int i=0; i<arr.length; i++){
-            if(!arr[i].isRemoved()){
-                if(!name.equals(arr[i].getName())){
-                if(this.sameCoordinate(arr[i].getCoordinates())){
-
-                    arr[i].remove();
-                    throw new OverlapException("OverlapException: Knights​ ​Overlap​ ​Exception "+arr[i].getName());
-                   
-                }
-            }
-            }
-        }
-
-        if(this.sameCoordinate(queen.getCoordinates())){
-            throw new QueenFoundException("QueenFoundException: Queen​ ​has​ ​been​ ​Found.​ ​Abort!");
-            
-        }
-
-
-
-    }
-
-    public void play(Knight[] knightsArray, Queen queen) throws StackEmptyException, NonCoordinateException, OverlapException, QueenFoundException{
+    public void play(PrintWriter w, Knight[] arr, Queen queen) throws StackEmptyException, NonCoordinateException, OverlapException, QueenFoundException{
         Object popped = this.getPopped();
         if(popped==null){
             this.remove();
@@ -162,32 +136,44 @@ class Knight extends Player{
         }
                 
         if(popped instanceof Coordinate){
-                try{
-                    this.move((Coordinate)popped, knightsArray, queen);
-                }
-                catch(OverlapException e){
-                    System.out.println(e.getMessage());
-                }
+            Coordinate _popped = (Coordinate)popped ;
+            p.setX(_popped.getX());
+            p.setY(_popped.getY());
 
-                catch(QueenFoundException e){
-                    queen.found(true);
-                    System.out.println(e.getMessage());
+            for(int i=0; i<arr.length; i++){
+                if(!arr[i].isRemoved()){
+                    if(!name.equals(arr[i].getName())){
+                        if(this.sameCoordinate(arr[i].getCoordinates())){
+
+                            arr[i].remove();
+                            throw new OverlapException("OverlapException: Knights​ ​Overlap​ ​Exception "+arr[i].getName());
+                   
+                        }
+                    }
                 }
-                }
+            }
+
+            if(this.sameCoordinate(queen.getCoordinates())){
+                throw new QueenFoundException("QueenFoundException: Queen​ ​has​ ​been​ ​Found.​ ​Abort!");
+            
+            }
         }
-
-
-
-
+                
+    }
 }
+
+
+
+
+
 
 class Queen extends Player{
     boolean found = false;
     public Queen(String name, Coordinate p){
         super(name, p);
     }
-    public void found(boolean x){
-        found = x;
+    public void milGayi(){
+        found = true;
     }
 
     public boolean found(){
@@ -274,36 +260,46 @@ class App{
 
 
 
-        int iter = 1;
+        int iter = 0;
 
 
-        while(iter<=nIterations && numKnights>0){
+        while(iter<=nIterations && numKnights>0 && !queen.found()){
+            iter++;
             for(int i=0; i<knightsArray.length; i++){
 
                 if(!knightsArray[i].isRemoved()){
-                System.out.println(iter+" "+knightsArray[i].toString());
-                
+                w.println(iter+" "+knightsArray[i].toString());
+                boolean success = false;
                 try{
-                    knightsArray[i].play(knightsArray, queen);
+                    knightsArray[i].play(w, knightsArray, queen);
+                    success = true;
                 }
                 catch(NonCoordinateException e){
-                    System.out.println(e.getMessage()); 
+                    w.println(e.getMessage()); 
 
                 }
                 catch(StackEmptyException e){
-                    System.out.println(e.getMessage()); 
+                    w.println(e.getMessage()); 
 
                 }
+                catch(OverlapException e){
+                    w.println(e.getMessage());
+                }
 
-                if(queen.found()==true){
-                    break;
+                catch(QueenFoundException e){
+                    queen.milGayi();
+                    w.println(e.getMessage());
+                }
+                if(success){
+                    w.println("No exception "+knightsArray[i].getCoordinates().toString());
+        
                 }
 
                 }
 
             
             }
-            iter++;
+            
         }
 
         
